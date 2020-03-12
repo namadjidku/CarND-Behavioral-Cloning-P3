@@ -16,11 +16,13 @@ from keras.models import load_model
 import h5py
 from keras import __version__ as keras_version
 
+from keras import backend as K
+K.clear_session
+
 sio = socketio.Server()
 app = Flask(__name__)
 model = None
 prev_image_array = None
-
 
 class SimplePIController:
     def __init__(self, Kp, Ki):
@@ -118,9 +120,9 @@ if __name__ == '__main__':
     if model_version != keras_version:
         print('You are using Keras version ', keras_version,
               ', but the model was built using ', model_version)
-
+    
     model = load_model(args.model)
-
+        
     if args.image_folder != '':
         print("Creating image folder at {}".format(args.image_folder))
         if not os.path.exists(args.image_folder):
@@ -132,8 +134,12 @@ if __name__ == '__main__':
     else:
         print("NOT RECORDING THIS RUN ...")
 
+
+    
     # wrap Flask application with engineio's middleware
     app = socketio.Middleware(sio, app)
 
     # deploy as an eventlet WSGI server
     eventlet.wsgi.server(eventlet.listen(('', 4567)), app)
+
+    
