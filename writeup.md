@@ -1,11 +1,5 @@
 # **Behavioral Cloning** 
 
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
-
 **Behavioral Cloning Project**
 
 The goals / steps of this project are the following:
@@ -22,30 +16,6 @@ The goals / steps of this project are the following:
 [image4]: examples/fltr_image.jpg
 
 
-## Rubric Points
-### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
-
----
-### Files Submitted & Code Quality
-
-#### 1. Submission includes all required files and can be used to run the simulator in autonomous mode
-
-My project includes the following files:
-* model.py containing the script to create and train the model
-* drive.py for driving the car in autonomous mode
-* model.h5 containing a trained convolution neural network 
-* writeup_report.md or writeup_report.pdf summarizing the results
-
-#### 2. Submission includes functional code
-Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
-```sh
-python drive.py model.h5
-```
-
-#### 3. Submission code is usable and readable
-
-The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
-
 ### Model Architecture and Training Strategy
 
 #### 1. An appropriate model architecture has been employed
@@ -57,7 +27,7 @@ InceptionV3(weights=weights_flag, include_top=False, input_shape=(139,139,3))
 ```
 Two Lambda and one cropping layers were added to the network to preprocess the images. The first Lambda layer was added to normalize the images, the cropping layer - to remove distracting backgroung from the images and the second Lambda layer to resize the images to 139x139. 
 
-The network was loaded without the last fully connected layer and the average pooling layer. I added a pooling layer and connected it to the end of the Inception module. After the added pooling layer, dropout layer was included with a keeping probability of 0.5 followed by three fully connected layers with a linear activation function:
+The network was loaded without the last fully connected layer and the average pooling layer. A pooling layer was added and connected to the end of the Inception module. After the added pooling layer, dropout layer was included with a keeping probability of 0.5 followed by three fully connected layers with a linear activation function:
 
 ```python
 x = GlobalAveragePooling2D()(inp)
@@ -68,22 +38,20 @@ x = Dense(10)(x)
 predictions = Dense(1)(x)
 ```
 
-I tried this model with not frozen weights (the model was retrained from the first layer) for 5 epochs. I got a validation accuracy of 0.02. Unfortunately, I was not able to test the network's perfomance on the first track, as I was getting errors with loading the model while running driver.py. 
-
-I also had an intution that for using such a powerful pretrained network I need more data, so I decided to go with a network suggested in the lectures (proposed by Nvidia team). Following is the architecture of the network: ![alt text][image1].
+Training the model from the first layer) for 5 epochs resulted in a validation accuracy of 0.02. It was not possible to test the network's perfomance on the first track, as I was getting errors with loading the model while running driver.py. The next solution was to go with a network proposed by a Nvidia team. Following is the architecture of the network: ![alt text][image1].
 
 
 #### 2. Attempts to reduce overfitting in the model
 
-To reduce overfitting I added two dropout layers. The first dropout layer was added with a keeping probability of 0.2 after the last 5x5 convolutional layer, the second - with the probabilty of 0.3 before the first fully-connected layer.  
+To reduce overfitting two dropout layers were added. The first dropout layer was added with a keeping probability of 0.2 after the last 5x5 convolutional layer, the second - with the probabilty of 0.3 before the first fully-connected layer.  
 
 #### 3. Model parameter tuning
 
-Since we use an adam optimizer, the learning rate was not tuned manually. I decided to go with a batch size of 64, although in the lectures' material the batch size was 32, I doubled it to reduce overfitting. Number of epochs was set to 5. I tried to increase the number of epochs, but it resulted in overfitting, so the optimal value, when training and validation losses decrease monotonically and the vehicle performs well on the first track in the autonomous mode, was 5.
+Since we used an adam optimizer, the learning rate was not tuned manually. The training was done with a batch size of 64 for 5 epochs. These parameters were optimal - training and validation losses were decreasing monotonically and the vehicle was performing well on the first track in the autonomous mode.
 
 #### 4. Appropriate training data
 
-I used the default training data, which is avaliable in the workspace. Following are the examples of a randomly selected image from the training set within the augmentation (flipped image):
+I used the default training data, which was avaliable in the workspace. Following are the examples of a randomly selected image from the training with its augmentation (flipped image):
 
 Image from the central camera            |  Flipped image                              |
 :---------------------------------------:|:-------------------------------------------:|
