@@ -38,7 +38,7 @@ x = Dense(10)(x)
 predictions = Dense(1)(x)
 ```
 
-Training the model from the first layer) for 5 epochs resulted in a validation accuracy of 0.02. It was not possible to test the network's perfomance on the first track, as I was getting errors with loading the model while running driver.py. The next solution was to go with a network proposed by a Nvidia team. Following is the architecture of the network: ![alt text][image1].
+Training the model from the first layer for 5 epochs resulted in a validation accuracy of 0.02. It was not possible to test the network's perfomance on the first track, as I was getting errors with loading the model while running driver.py. The next solution was to go with a network proposed by a Nvidia team. Following is the architecture of the network: ![alt text][image1].
 
 
 #### 2. Attempts to reduce overfitting in the model
@@ -58,21 +58,19 @@ Image from the central camera            |  Flipped image                       
 ![alt text][image3]                      |  ![alt text][image4]
 
 
-### Model Architecture and Training Strategy
-
-#### 1. Solution Design Approach
+#### 5. Solution Design Approach
 
 The overall strategy for deriving a model architecture was to try the transfer learning concept first with the inception module and then try the architecture developed by the Nvidia team. 
 
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that both models I tried had a low mean squared error on the training set but a higher mean squared error on the validation set. This implied that the model was overfitting. So to combat the overfitting, I added dropout layers to the model. After adding dropouts, the loss between training and validation sets was decreasing monotonically and quite close for both sets.
+In order to gauge how well the model was working, images and steering angle data were split into a training and validation set. Both models I tried had a low mean squared error on the training set but a higher mean squared error on the validation set. This implied that the models were overfitting. So to overcome the overfitting, dropout layers were added to the second model. After adding dropouts, the loss between training and validation sets was decreasing monotonically and quite close for both sets.
 
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track, so to improve the driving behavior in these cases, I increased the keeping probability for the dropout layers from 0.4 to 0.5.
+The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track, so to improve the driving behavior in these cases, the keeping probability for the dropout layers was increased from 0.4 to 0.5.
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
-#### 2. Final Model Architecture
+#### 6. Final Model Architecture
 
-My final model consisted of the following layers:
+The final model architecture:
 
 | Layer         		      |     Output Shape 	|  Params            |
 |:---------------------------:|:-------------------:|:------------------:|
@@ -96,11 +94,11 @@ Trainable params: 981,819
 Non-trainable params: 0
 
 
-#### 3. Creation of the Training Set & Training Process
+#### 7. Creation of the Training Set & Training Process
 
-I did not collect data, for the training and validation sets I used default data avaliable in the workspace. I split the data in the ration of 70/30 for training and validation. I used images from all three cameras and augmented data via flipping, so for each row in a csv file I got 6 images.   
+The data was plit in the ration of 70/30 for training and validation. Images from all three cameras were used and augmented via flipping, so for each row in a csv file we got 6 images.   
 
-I finally randomly shuffled training and validation sets. 
+Finally both training and validation sets were randomly shuffled.
 
 Training and validation loss are plotted on the graphic below:
 
